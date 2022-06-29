@@ -53,8 +53,16 @@ const state = {
   ],
   cart: [],
   total: `£${(0).toFixed(2)}`,
-  sortByType: false,
-  sortAlphabetically: false,
+  sort: {
+    sortAlphabetically: {
+      sort: false,
+      type: null,
+    },
+    sortByType: {
+      sort: false,
+      type: 'all',
+    },
+  },
 };
 
 const setState = (newState) => {
@@ -112,14 +120,6 @@ const createStoreItem = (item) => {
   li.append(button);
 };
 
-const renderStoreItems = () => {
-  const storeProducts = document.querySelector('.store--item-list');
-  storeProducts.innerHTML = '';
-  state.items.forEach((item) => {
-    createStoreItem(item);
-  });
-};
-
 const createCartItem = (item) => {
   const li = document.createElement('li');
   const img = document.createElement('img');
@@ -169,6 +169,46 @@ const calculateCartTotal = () => {
   return sum;
 };
 
+const sortByTypeListener = () => {
+  const sortByTypeDropdown = document.querySelector('#fiterByTypeSelect');
+  sortByTypeDropdown.addEventListener('input', () => {
+    const value = sortByTypeDropdown.value;
+    if (value !== 'all') {
+      state.sort.sortByType.sort = true;
+      state.sort.sortByType.type = value;
+    } else {
+      state.sort.sortByType.sort = false;
+      state.sort.sortByType.type = 'all';
+    }
+  });
+};
+
+const sortAlphabeticallyListener = () => {
+  const sortAlphabeticallyDropdown = document.querySelector(
+    '#fiterAlphabeticallySelect'
+  );
+  sortAlphabeticallyDropdown.addEventListener('input', () => {
+    const value = sortAlphabeticallyDropdown.value;
+    if (value === 'A-Z' || value === 'Z-A') {
+      state.sort.sortAlphabetically.sort = true;
+      state.sort.sortAlphabetically.type = value;
+    } else {
+      state.sort.sortAlphabetically.sort = false;
+      state.sort.sortAlphabetically.type = null;
+    }
+    console.log(state);
+    render();
+  });
+};
+
+const renderStoreItems = () => {
+  const storeProducts = document.querySelector('.store--item-list');
+  storeProducts.innerHTML = '';
+  state.items.forEach((item) => {
+    createStoreItem(item);
+  });
+};
+
 const renderCartItems = () => {
   const cartProducts = document.querySelector('.cart--item-list');
   cartProducts.innerHTML = '';
@@ -191,6 +231,8 @@ const render = () => {
 };
 
 const init = () => {
+  sortByTypeListener();
+  sortAlphabeticallyListener();
   render();
 };
 

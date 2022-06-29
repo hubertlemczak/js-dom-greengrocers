@@ -12,6 +12,24 @@
   <body>
     <header id="store">
       <h1>Greengrocers</h1>
+      <form>
+        <label for="fiterByTypeSelect"
+          >Filter:
+          <select name="fiterByType" id="fiterByTypeSelect">
+            <option value="all" selected>All</option>
+            <option value="veg">Vegetables</option>
+            <option value="fruit">Fruit</option>
+          </select>
+        </label>
+        <label for="fiterAlphabetically"
+          >Sort:
+          <select name="fiterAlphabetically" id="fiterAlphabeticallySelect">
+            <option value="false" selected></option>
+            <option value="A-Z">A-Z</option>
+            <option value="Z-A">Z-A</option>
+          </select>
+        </label>
+      </form>
       <ul class="item-list store--item-list">
         <!-- Take a look at store-item.html -->
       </ul>
