@@ -97,7 +97,6 @@ const addItemToCart = (item) => {
     item.quantity++;
     render();
   }
-  console.log(state.cart);
 };
 
 const removeItemFromCart = (itemId) => {
@@ -122,10 +121,7 @@ const createStoreItem = (item) => {
   div.classList.add('store--item-icon');
   img.setAttribute('src', `./assets/icons/${item.id}.svg`);
   img.setAttribute('alt', `${item.name}`);
-  button.addEventListener('click', () => {
-    console.log(`adding ${item.name} to cart`);
-    addItemToCart(item);
-  });
+  button.addEventListener('click', () => addItemToCart(item));
   button.innerText = 'Add to cart';
 
   const storeProducts = document.querySelector('.store--item-list');
