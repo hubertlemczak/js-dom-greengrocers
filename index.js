@@ -95,7 +95,7 @@ const addItemToCart = (item) => {
     setState({ cart: newCart });
   } else {
     item.quantity++;
-    render();
+    renderCart();
   }
 };
 
@@ -126,9 +126,8 @@ const createStoreItem = (item) => {
 
   const storeProducts = document.querySelector('.store--item-list');
   storeProducts.append(li);
-  li.append(div);
+  li.append(div, button);
   div.append(img);
-  li.append(button);
 };
 
 const createCartItem = (item) => {
@@ -148,7 +147,7 @@ const createCartItem = (item) => {
   decrement.addEventListener('click', () => {
     item.quantity--;
     if (item.quantity <= 0) removeItemFromCart(item.id);
-    render();
+    renderCart();
   });
   decrement.innerText = '-';
   decrement.classList.add('.quantity-btn', 'remove-btn', 'center');
@@ -158,18 +157,14 @@ const createCartItem = (item) => {
 
   increment.addEventListener('click', () => {
     item.quantity++;
-    render();
+    renderCart();
   });
   increment.innerText = '+';
   increment.classList.add('.quantity-btn', 'add-btn', 'center');
 
   const cartProducts = document.querySelector('.cart--item-list');
   cartProducts.append(li);
-  li.append(img);
-  li.append(p);
-  li.append(decrement);
-  li.append(span);
-  li.append(increment);
+  li.append(img, p, decrement, span, increment);
 };
 
 const calculateCartTotal = () => {
@@ -280,10 +275,14 @@ const renderTotal = () => {
   total.innerText = state.total;
 };
 
-const render = () => {
-  renderStoreItems();
+const renderCart = () => {
   renderCartItems();
   renderTotal();
+};
+
+const render = () => {
+  renderStoreItems();
+  renderCart();
 };
 
 const init = () => {
