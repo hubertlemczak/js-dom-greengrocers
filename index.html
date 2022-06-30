@@ -13,20 +13,22 @@
     <header id="store">
       <h1>Greengrocers</h1>
       <form>
-        <label for="fiterByTypeSelect"
+        <label for="filterSelect"
           >Filter:
-          <select name="fiterByType" id="fiterByTypeSelect">
+          <select name="filter" id="filterSelect">
             <option value="all" selected>All</option>
             <option value="veg">Vegetables</option>
             <option value="fruit">Fruit</option>
           </select>
         </label>
-        <label for="fiterAlphabetically"
+        <label for="sort"
           >Sort:
-          <select name="fiterAlphabetically" id="fiterAlphabeticallySelect">
-            <option value="false" selected></option>
+          <select name="sort" id="sortSelect">
+            <option value="null" selected></option>
             <option value="A-Z">A-Z</option>
             <option value="Z-A">Z-A</option>
+            <option value="Low-High">Low - High</option>
+            <option value="High-Low">High - Low</option>
           </select>
         </label>
       </form>

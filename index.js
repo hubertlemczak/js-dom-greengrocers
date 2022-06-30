@@ -3,54 +3,65 @@ const state = {
     {
       id: '001-beetroot',
       name: 'beetroot',
-      price: 0.35,
+      price: 0.25,
+      type: 'veg',
     },
     {
       id: '002-carrot',
       name: 'carrot',
       price: 0.35,
+      type: 'veg',
     },
     {
       id: '003-apple',
       name: 'apple',
-      price: 0.35,
+      price: 0.4,
+      type: 'fruit',
     },
     {
       id: '004-apricot',
       name: 'apricot',
-      price: 0.35,
+      price: 0.2,
+      type: 'fruit',
     },
     {
       id: '005-avocado',
       name: 'avocado',
-      price: 0.35,
+      price: 0.7,
+      type: 'fruit',
     },
     {
       id: '006-bananas',
       name: 'bananas',
-      price: 0.35,
+      price: 0.2,
+      type: 'fruit',
     },
     {
       id: '007-bell-pepper',
       name: 'bell pepper',
-      price: 0.35,
+      price: 0.15,
+      type: 'fruit',
     },
     {
       id: '008-berry',
-      name: 'berry',
-      price: 0.35,
+      name: 'cherry',
+      price: 0.5,
+      type: 'fruit',
     },
     {
       id: '009-blueberry',
       name: 'blueberry',
-      price: 0.35,
+      price: 0.6,
+      type: 'fruit',
     },
     {
       id: '010-eggplant',
       name: 'eggplant',
-      price: 0.35,
+      price: 0.9,
+      type: 'fruit',
     },
   ],
+  shopItems: [],
   cart: [],
   total: `£${(0).toFixed(2)}`,
   sort: {
@@ -61,6 +72,10 @@ const state = {
     sortByType: {
       sort: false,
       type: 'all',
+    },
+    sortByPrice: {
+      sort: false,
+      type: null,
     },
   },
 };
@@ -169,42 +184,87 @@ const calculateCartTotal = () => {
   return sum;
 };
 
-const sortByTypeListener = () => {
-  const sortByTypeDropdown = document.querySelector('#fiterByTypeSelect');
-  sortByTypeDropdown.addEventListener('input', () => {
-    const value = sortByTypeDropdown.value;
+const filterListener = () => {
+  const filterDropdown = document.querySelector('#filterSelect');
+  filterDropdown.addEventListener('input', () => {
+    const value = filterDropdown.value;
+    const newState = { ...state.sort };
     if (value !== 'all') {
-      state.sort.sortByType.sort = true;
-      state.sort.sortByType.type = value;
+      newState.sortByType.sort = true;
+      newState.sortByType.type = value;
     } else {
-      state.sort.sortByType.sort = false;
-      state.sort.sortByType.type = 'all';
+      newState.sortByType.sort = false;
+      newState.sortByType.type = 'all';
     }
+    setState({ sort: newState });
+    setStoreItems();
   });
 };
 
-const sortAlphabeticallyListener = () => {
-  const sortAlphabeticallyDropdown = document.querySelector(
-    '#fiterAlphabeticallySelect'
-  );
-  sortAlphabeticallyDropdown.addEventListener('input', () => {
-    const value = sortAlphabeticallyDropdown.value;
+const sortListener = () => {
+  const sortDropdown = document.querySelector('#sortSelect');
+  sortDropdown.addEventListener('input', () => {
+    const value = sortDropdown.value;
+    const newState = { ...state.sort };
     if (value === 'A-Z' || value === 'Z-A') {
-      state.sort.sortAlphabetically.sort = true;
-      state.sort.sortAlphabetically.type = value;
+      newState.sortAlphabetically.sort = true;
+      newState.sortAlphabetically.type = value;
+      newState.sortByPrice.sort = false;
+      newState.sortByPrice.type = null;
+    } else if (value === 'Low-High' || value === 'High-Low') {
+      newState.sortByPrice.sort = true;
+      newState.sortByPrice.type = value;
+      newState.sortAlphabetically.sort = false;
+      newState.sortAlphabetically.type = null;
     } else {
-      state.sort.sortAlphabetically.sort = false;
-      state.sort.sortAlphabetically.type = null;
+      newState.sortAlphabetically.sort = false;
+      newState.sortAlphabetically.type = null;
     }
-    console.log(state);
-    render();
+    setState({ sort: newState });
+    setStoreItems();
   });
+};
+
+const sortAlphabetically = () => {
+  const items = [...state.shopItems];
+  const sortedItems = items.sort((a, b) => (a.name > b.name ? 1 : -1));
+
+  if (state.sort.sortAlphabetically.type === 'A-Z')
+    setState({ shopItems: sortedItems });
+  else setState({ shopItems: sortedItems.reverse() });
+};
+
+const sortByPrice = () => {
+  const items = [...state.shopItems];
+  const sortedItems = items.sort((a, b) => a.price - b.price);
+
+  if (state.sort.sortByPrice.type === 'Low-High')
+    setState({ shopItems: sortedItems });
+  else setState({ shopItems: sortedItems.reverse() });
+};
+
+const sortByType = () => {
+  const items = [...state.items];
+  const sortedItems = items.filter(
+    (item) => item.type === state.sort.sortByType.type
+  );
+  setState({ shopItems: sortedItems });
+};
+
+const setStoreItems = () => {
+  if (state.sort.sortByType.sort === true) sortByType();
+  else {
+    const shopItems = [...state.items];
+    setState({ shopItems: shopItems });
+  }
+  if (state.sort.sortAlphabetically.sort === true) sortAlphabetically();
+  if (state.sort.sortByPrice.sort === true) sortByPrice();
 };
 
 const renderStoreItems = () => {
   const storeProducts = document.querySelector('.store--item-list');
   storeProducts.innerHTML = '';
-  state.items.forEach((item) => {
+  state.shopItems.forEach((item) => {
     createStoreItem(item);
   });
 };
@@ -231,8 +291,9 @@ const render = () => {
 };
 
 const init = () => {
-  sortByTypeListener();
-  sortAlphabeticallyListener();
+  setStoreItems();
+  filterListener();
+  sortListener();
   render();
 };
 
